@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:orb/app.dart';
+import 'package:orb_demo/app.dart';
 
 void main() {
-  runApp(OrbApp());
+  runApp(App());
 }

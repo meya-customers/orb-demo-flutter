@@ -1,4 +1,4 @@
-name: orb_example
+name: orb_demo
 description: Demonstrates how to use the orb plugin.
 
 # Don't publish to pub.dev using `pub publish`.

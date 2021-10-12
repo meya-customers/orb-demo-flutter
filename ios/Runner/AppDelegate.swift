@@ -1,12 +1,19 @@
-import UIKit
-import orb
 import Flutter
+import UIKit
 import UserNotifications
+import file_picker
+import flutter_secure_storage
+import image_picker
+import orb
+import package_info_plus
+import path_provider
+import url_launcher
 
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-    lazy var orb: Orb = Orb()
+    lazy var engine: FlutterEngine = FlutterEngine(name: "demo")
+    lazy var orb: Orb = Orb(engine: engine)
 
     override func application(
         _ application: UIApplication,
@@ -30,7 +37,7 @@ import UserNotifications
             print(meyaIntegrationId)
             print(aps)
             if
-                let alert = aps["alert"],
+                let alert = aps["alert"] as? [String: AnyObject],
                 let title = alert["title"],
                 let body = alert["body"]
             {
@@ -117,7 +124,7 @@ import UserNotifications
     }
     
     func launchOrb() {
-        orb.initialize()
+        initialize()
         
         let platformVersion = "iOS " + UIDevice.current.systemVersion
         let connectionOptions = OrbConnectionOptions(
@@ -154,41 +161,6 @@ import UserNotifications
         
         if (!orb.ready) {
             orb.onReady {
-                /*
-                self.orb.onFirstConnect({ eventStream in
-                        print("================ onFirstConnect =================")
-                        print("Total events: \(eventStream.count)")
-                    },
-                    result: { result in
-                        print("Set the first connect listener: \(String(describing: result)).")
-                    }
-                )
-                self.orb.onReconnect({ eventStream in
-                        print("================ onReconnect =================")
-                        print("Total events: \(eventStream.count)")
-                    },
-                    result: { result in
-                        print("Set the reconnect listener: \(String(describing: result)).")
-                    }
-                )
-                self.orb.onEvent({ event, eventStream in
-                        print("================ onEvent =================")
-                        print(event)
-                        print("Total events: \(eventStream.count)")
-                    },
-                    result: { result in
-                        print("Set the event listener: \(String(describing: result)).")
-                    }
-                )
-                self.orb.onEventStream({ eventStream in
-                        print("================ onEventStream =================")
-                        print("Total events: \(eventStream.count)")
-                    },
-                    result: { result in
-                        print("Set the event stream listener: \(String(describing: result)).")
-                    }
-                )
-                */
                 self.orb.configure(config: config)
                 self.orb.connect(options: connectionOptions)
             }
@@ -198,23 +170,6 @@ import UserNotifications
         }
         orb.onConnnected {
             print("Orb connected.")
-            /*
-            self.orb.publishEvent(
-                event: [
-                    "type": "meya.analytics.event.track",
-                    "data": [
-                        "event": "orb.connected",
-                        "data": [
-                            "key1": "value1",
-                            "key2": 12345.1,
-                            "key3": false,
-                            "key4": 1234,
-                        ] as [String: Any],
-                        "timestamp": NSDate().timeIntervalSince1970,
-                    ] as [String: Any],
-                ] as [String: Any]
-            )
-            */
         }
         orb.onDisconnected {
             print("Orb disconnected.")
@@ -227,6 +182,36 @@ import UserNotifications
                 to: UIApplication.shared, for: nil
             )
         }
-        self.window.rootViewController = orb.viewController()
+        self.window.rootViewController = FlutterViewController(engine: engine, nibName: nil, bundle: nil)
+    }
+
+    public func initialize() {
+        // Start the Flutter engine
+        engine.run()
+
+        // Register all required Flutter plugins
+        if let registrar = engine.registrar(forPlugin: "OrbPlugin") {
+            OrbPlugin.register(with: registrar)
+        }
+        if let registrar = engine.registrar(forPlugin: "FilePickerPlugin") {
+            FilePickerPlugin.register(with: registrar)
+        }
+        if let registrar = engine.registrar(forPlugin: "FlutterSecureStoragePlugin") {
+            FlutterSecureStoragePlugin.register(with: registrar)
+        }
+        if let registrar = engine.registrar(forPlugin: "FLTImagePickerPlugin") {
+            FLTImagePickerPlugin.register(with: registrar)
+        }
+        if let registrar = engine.registrar(forPlugin: "FLTPackageInfoPlusPlugin") {
+            FLTPackageInfoPlusPlugin.register(with: registrar)
+        }
+        if let registrar = engine.registrar(forPlugin: "FLTPathProviderPlugin") {
+            FLTPathProviderPlugin.register(with: registrar)
+        }
+        if let registrar = engine.registrar(forPlugin: "FLTURLLauncherPlugin") {
+            FLTURLLauncherPlugin.register(with: registrar)
+        }
+
+        orb.initCallbacks()
     }
 }
