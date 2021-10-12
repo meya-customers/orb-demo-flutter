@@ -29,7 +29,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "ai.meya.orb_example"
+        applicationId "ai.meya.orb_demo"
         minSdkVersion 18
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()

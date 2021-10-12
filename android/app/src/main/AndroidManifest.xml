@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ai.meya.orb_example">
+    package="ai.meya.orb_demo">
     <uses-permission android:name="android.permission.CAMERA" />
     <queries>
         <intent>
@@ -21,7 +21,7 @@
         </intent>
     </queries>
     <application
-        android:label="orb_example"
+        android:label="orb_demo"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

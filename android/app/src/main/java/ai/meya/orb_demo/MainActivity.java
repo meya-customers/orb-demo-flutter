@@ -1,4 +1,4 @@
-package ai.meya.orb_example;
+package ai.meya.orb_demo;
 
 import android.os.Bundle;
 import android.util.Log;
